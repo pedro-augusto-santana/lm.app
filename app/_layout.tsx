@@ -12,7 +12,7 @@ export default function RootLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="home"
+        name="app"
         component={HomeNavigator}
         options={{ headerBackVisible: false, headerShown: false }}
       />

@@ -1,13 +1,13 @@
 import {
-  Button,
-  ButtonProps,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableOpacityProps,
 } from "react-native";
 
-type ThemedButtonProps = ButtonProps & {
+type ThemedButtonProps = TouchableOpacityProps & {
   onPress: Function;
+  title: string;
   brand?: boolean;
 };
 

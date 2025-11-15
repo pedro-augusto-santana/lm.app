@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AssignmentsScreen from "./assignments-screen";
 import LessonScreen from "./lesson-screen";
+import AssignmentDetailsScreen from "./assignment-details-screen";
 
 const Stack = createNativeStackNavigator();
 
@@ -10,6 +11,11 @@ export default function HomeNavigator() {
       <Stack.Screen
         name="assignments"
         component={AssignmentsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="assignment-details"
+        component={AssignmentDetailsScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen name="lesson" component={LessonScreen} />

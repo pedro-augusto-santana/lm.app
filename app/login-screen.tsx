@@ -12,7 +12,7 @@ export default function LoginScreen() {
   const [pin, setPin] = useState("");
 
   const handleSubmit = () => {
-    navigation.replace("home");
+    navigation.replace("app");
   };
 
   return (
