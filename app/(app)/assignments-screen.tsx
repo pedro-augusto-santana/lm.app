@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { Button } from "react-native";
+import { Image } from "react-native";
 import { Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -52,13 +52,13 @@ export default function AssignmentsScreen() {
 
   return (
     <SafeAreaView>
-      <View style={{ paddingHorizontal: 12 }}>
+      <View style={{ padding: 20 }}>
         <ThemedText
           style={{
             letterSpacing: -0.5,
             paddingVertical: 24,
             fontSize: 24,
-            fontWeight: 900,
+            fontWeight: "900",
             textAlign: "center",
           }}
         >
@@ -72,54 +72,63 @@ export default function AssignmentsScreen() {
             marginBottom: 24,
           }}
         >
-          {assignments.map((item: any) => (
-            <View
-              style={{
-                backgroundColor: "dfdfdf",
-                borderColor: "#dedede",
-                borderWidth: 1,
-                minHeight: 120,
-                padding: 12,
-                borderRadius: 8,
-              }}
-              key={item.id}
-            >
-              <Text style={{ fontSize: 24, marginBottom: 16, fontWeight: 700 }}>
-                {item.assignment.title}
-              </Text>
-              <Text style={{ fontSize: 16, opacity: 0.5 }}>
-                {item.assignment.description}
-              </Text>
+          {assignments.map((item: any) => {
+            return (
               <View
-                style={{ display: "flex", flexDirection: "row", marginTop: 12 }}
+                style={{
+                  backgroundColor: "#f9fafb",
+                  borderColor: "#e5e7eb",
+                  borderWidth: 1,
+                  minHeight: 120,
+                  padding: 12,
+                  borderRadius: 8,
+                }}
+                key={item.id}
               >
                 <Text
+                  style={{ fontSize: 24, marginBottom: 16, fontWeight: "700" }}
+                >
+                  {item.assignment.title}
+                </Text>
+                <Text style={{ fontSize: 16, opacity: 0.5 }}>
+                  {item.assignment.description}
+                </Text>
+                <View
                   style={{
-                    backgroundColor: mapLabelColor(item.status)[0],
-                    color: mapLabelColor(item.status)[1],
-                    borderWidth: 1,
-                    borderColor: mapLabelColor(item.status)[1],
-                    borderRadius: 1000,
-                    paddingHorizontal: 12,
-                    paddingVertical: 8,
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 12,
                   }}
                 >
-                  {mapStatus(item.status)}
-                </Text>
+                  <Text
+                    style={{
+                      backgroundColor: mapLabelColor(item.status)[0],
+                      color: mapLabelColor(item.status)[1],
+                      borderWidth: 1,
+                      borderColor: mapLabelColor(item.status)[1],
+                      borderRadius: 1000,
+                      paddingHorizontal: 12,
+                      paddingVertical: 8,
+                    }}
+                  >
+                    {mapStatus(item.status)}
+                  </Text>
+                </View>
+                <View style={{ marginTop: 24 }}>
+                  <ThemedButton
+                    title="Começar!"
+                    onPress={() =>
+                      navigator.navigate("assignment-details-screen", {
+                        assignment: item.assignment,
+                      })
+                    }
+                    brand
+                  />
+                </View>
               </View>
-              <View style={{ marginTop: 24 }}>
-                <ThemedButton
-                  title="Começar!"
-                  onPress={() =>
-                    navigator.navigate("assignment-details")
-                  }
-                  brand
-                />
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
-        <Button onPress={fetchData} title="Tentar novamente"></Button>
       </View>
     </SafeAreaView>
   );

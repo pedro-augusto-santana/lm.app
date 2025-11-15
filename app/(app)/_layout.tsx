@@ -9,16 +9,16 @@ export default function HomeNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="assignments"
+        name="assignments-screen"
         component={AssignmentsScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="assignment-details"
+        name="assignment-details-screen"
         component={AssignmentDetailsScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="lesson" component={LessonScreen} />
+      <Stack.Screen name="lesson-screen" component={LessonScreen} />
     </Stack.Navigator>
   );
 }
