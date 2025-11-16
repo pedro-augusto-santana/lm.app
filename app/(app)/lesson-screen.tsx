@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -22,8 +22,28 @@ export default function LessonScreen() {
   const navigator = useNavigation();
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<any>({});
+  const inputRefs = useRef<(TextInput | null)[]>([]);
 
   const currentLesson = lessons[currentPage];
+
+  useEffect(() => {
+    if (currentLesson.lesson_type === "complete") {
+      const { hints, word } = currentLesson.data;
+
+      // Find the first non-hint input
+      let firstEditableIndex = -1;
+      for (let i = 0; i < word.length; i++) {
+        if (!hints.includes(String(i))) {
+          firstEditableIndex = i;
+          break;
+        }
+      }
+
+      if (firstEditableIndex !== -1 && inputRefs.current[firstEditableIndex]) {
+        inputRefs.current[firstEditableIndex]?.focus();
+      }
+    }
+  }, [currentLesson.id]);
 
   const handleWordChange = (text: string, index: number) => {
     setAnswers((prevAnswers) => ({
@@ -33,6 +53,23 @@ export default function LessonScreen() {
         [index]: text.toUpperCase(),
       },
     }));
+
+    if (text.length > 0 && currentLesson.lesson_type === "complete") {
+      const { word, hints } = currentLesson.data;
+
+      // Find the next editable input
+      let nextIndex = -1;
+      for (let i = index + 1; i < word.length; i++) {
+        if (!hints.includes(String(i))) {
+          nextIndex = i;
+          break;
+        }
+      }
+
+      if (nextIndex !== -1 && inputRefs.current[nextIndex]) {
+        inputRefs.current[nextIndex]?.focus();
+      }
+    }
   };
 
   const handleNext = () => {
@@ -71,6 +108,7 @@ export default function LessonScreen() {
               return (
                 <TextInput
                   key={index}
+                  ref={(el) => (inputRefs.current[index] = el)}
                   style={[styles.letterBox, isHint && styles.hintBox]}
                   value={
                     isHint
@@ -180,10 +218,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageAndStatementContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     marginBottom: 20,
-    flexWrap: "wrap",
     justifyContent: "center",
   },
   statement: {

@@ -76,5 +76,52 @@
         }
       ]
     }
+  },
+  {
+    "id": 4,
+    "date": "2025-11-16T17:05:06.000000Z",
+    "author": "Administrador",
+    "status": "pending",
+    "assignment": {
+      "id": 4,
+      "title": "Atividade Teste",
+      "description": "Teste",
+      "lessons": [
+        {
+          "id": 5,
+          "created_at": null,
+          "updated_at": null,
+          "title": "O carro tem quantas rodas?",
+          "tags": "Carro,Matemática,Contar",
+          "description": "Selecione a opção certa de quantas rodas o carrinho tem",
+          "statement": "Quantas rodas tem o carrinho?",
+          "lesson_type": "quizz",
+          "image": null,
+          "data": {
+            "question": "Selecione a opção certa de quantas rodas o carrinho tem",
+            "alternatives": [
+              {
+                "id": 0,
+                "text": "1"
+              },
+              {
+                "id": 1,
+                "text": "2"
+              },
+              {
+                "id": 2,
+                "text": "3"
+              },
+              {
+                "id": 3,
+                "text": "4"
+              }
+            ],
+            "answer": "3"
+          },
+          "author": 1
+        }
+      ]
+    }
   }
 ]
