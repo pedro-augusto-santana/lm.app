@@ -15,9 +15,39 @@ import ThemedText from "@/components/themed-text";
 import { useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
+interface Alternative {
+  id: number;
+  text: string;
+}
+
+interface QuizzData {
+  question: string;
+  alternatives: Alternative[];
+  answer: string;
+}
+
+interface CompleteData {
+  word: string;
+  hints: string[];
+}
+
+interface Lesson {
+  id: number;
+  created_at: string | null;
+  updated_at: string | null;
+  title: string;
+  tags: string;
+  description: string;
+  statement: string;
+  lesson_type: "complete" | "quizz";
+  image: string | null;
+  data: QuizzData | CompleteData;
+  author: number;
+}
+
 export default function LessonScreen() {
   const route = useRoute();
-  const lessons = route.params?.lessons as any[];
+  const lessons = route.params?.lessons as Lesson[];
 
   const navigator = useNavigation();
   const [currentPage, setCurrentPage] = useState(0);
@@ -128,11 +158,11 @@ export default function LessonScreen() {
         </View>
       );
     } else if (currentLesson.lesson_type === "quizz") {
-      const { options } = currentLesson.data;
+      const { alternatives } = currentLesson.data;
 
-      const handleOptionSelect = (option: string) => {
+      const handleOptionSelect = (alternativeId: number) => {
         const newAnswers = { ...answers };
-        newAnswers[currentLesson.id] = option;
+        newAnswers[currentLesson.id] = alternativeId;
         setAnswers(newAnswers);
       };
 
@@ -142,8 +172,8 @@ export default function LessonScreen() {
             {currentLesson.statement}
           </ThemedText>
           <View style={styles.optionsContainer}>
-            {options.map((option: string, index: number) => {
-              const isSelected = answers[currentLesson.id] === option;
+            {alternatives.map((alternative: { id: number; text: string }, index: number) => {
+              const isSelected = answers[currentLesson.id] === alternative.id;
               return (
                 <TouchableOpacity
                   key={index}
@@ -151,9 +181,9 @@ export default function LessonScreen() {
                     styles.optionCard,
                     isSelected && styles.selectedOptionCard,
                   ]}
-                  onPress={() => handleOptionSelect(option)}
+                  onPress={() => handleOptionSelect(alternative.id)}
                 >
-                  <ThemedText style={styles.optionText}>{option}</ThemedText>
+                  <ThemedText style={styles.optionText}>{alternative.text}</ThemedText>
                   {isSelected && (
                     <Feather name="check-circle" size={24} color="white" />
                   )}
