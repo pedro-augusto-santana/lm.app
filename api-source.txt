@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "date": null,
+    "author": "Administrador",
+    "status": "pending",
+    "assignment": {
+      "id": 2,
+      "title": "Atividade Avaliativa",
+      "description": "Atividade avaliativa do 1º bimestre do 1º ano",
+      "lessons": [
+        {
+          "id": 2,
+          "created_at": null,
+          "updated_at": null,
+          "title": "O bichinho do brejo",
+          "tags": "Sapo,Animais,Alfabeto",
+          "description": "Atividade do sapo",
+          "statement": "Qual o animalzinho que vive no brejo e faz \"croac\"",
+          "lesson_type": "complete",
+          "image": "http://192.168.0.195:4442/storage/images/xXikxidQ8N0QufQHKjMJ3a3lSptm8IVt0nXxzDpA.jpg",
+          "data": {
+            "word": "SAPO",
+            "hints": [
+              "1"
+            ]
+          },
+          "author": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "date": "2025-11-15T17:43:04.000000Z",
+    "author": "Administrador",
+    "status": "pending",
+    "assignment": {
+      "id": 3,
+      "title": "Atividade complementar p/ João",
+      "description": "Atividade complementar para o aluno João da Silva",
+      "lessons": [
+        {
+          "id": 2,
+          "created_at": null,
+          "updated_at": null,
+          "title": "O bichinho do brejo",
+          "tags": "Sapo,Animais,Alfabeto",
+          "description": "Atividade do sapo",
+          "statement": "Qual o animalzinho que vive no brejo e faz \"croac\"",
+          "lesson_type": "complete",
+          "image": "http://192.168.0.195:4442/storage/images/xXikxidQ8N0QufQHKjMJ3a3lSptm8IVt0nXxzDpA.jpg",
+          "data": {
+            "word": "SAPO",
+            "hints": [
+              "1"
+            ]
+          },
+          "author": 1
+        },
+        {
+          "id": 3,
+          "created_at": null,
+          "updated_at": null,
+          "title": "Quem faz MUUUUUU",
+          "tags": "Vaca,Animais,Alfabetização",
+          "description": "Quem faz MUUUUUU",
+          "statement": "Qual o bichinho que faz MUUUU?",
+          "lesson_type": "complete",
+          "image": "http://192.168.0.195:4442/storage/images/vT9CzePptGiZRYFaRVGH094BxuY4738U1yrW9o72.jpg",
+          "data": {
+            "word": "VACA",
+            "hints": []
+          },
+          "author": 1
+        }
+      ]
+    }
+  }
+]

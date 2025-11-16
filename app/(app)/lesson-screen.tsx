@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedButton from "@/components/themed-button";
@@ -23,6 +24,16 @@ export default function LessonScreen() {
   const [answers, setAnswers] = useState<any>({});
 
   const currentLesson = lessons[currentPage];
+
+  const handleWordChange = (text: string, index: number) => {
+    setAnswers((prevAnswers) => ({
+      ...prevAnswers,
+      [currentLesson.id]: {
+        ...(prevAnswers[currentLesson.id] || {}),
+        [index]: text.toUpperCase(),
+      },
+    }));
+  };
 
   const handleNext = () => {
     if (currentPage < lessons.length - 1) {
@@ -41,20 +52,19 @@ export default function LessonScreen() {
       const { word, hints } = currentLesson.data;
       const wordArray = word.split("");
 
-      const handleWordChange = (text: string, index: number) => {
-        const newAnswers = { ...answers };
-        if (!newAnswers[currentLesson.id]) {
-          newAnswers[currentLesson.id] = new Array(word.length).fill("");
-        }
-        newAnswers[currentLesson.id][index] = text.toUpperCase();
-        setAnswers(newAnswers);
-      };
-
       return (
         <View style={styles.lessonContent}>
-          <ThemedText style={styles.statement}>
-            {currentLesson.statement}
-          </ThemedText>
+          <View style={styles.imageAndStatementContainer}>
+            {currentLesson.image && (
+              <Image
+                source={{ uri: currentLesson.image }}
+                style={styles.lessonImage}
+              />
+            )}
+            <ThemedText style={styles.statement}>
+              {currentLesson.statement}
+            </ThemedText>
+          </View>
           <View style={styles.wordContainer}>
             {wordArray.map((char: string, index: number) => {
               const isHint = hints.includes(String(index));
@@ -160,7 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   title: {
-    fontSize: 48,
+    fontSize: 32,
     color: "#005a9c",
     textAlign: "center",
     marginBottom: 20,
@@ -169,12 +179,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
+  imageAndStatementContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
   statement: {
     fontSize: 28,
     color: "#333",
-    textAlign: "center",
-    marginBottom: 40,
     lineHeight: 36,
+    flexShrink: 1,
+  },
+  lessonImage: {
+    height: "50%",
+    width: "auto",
+    objectFit: "contain",
+    aspectRatio: 1,
+    marginRight: 15,
+    borderRadius: 10,
   },
   wordContainer: {
     flexDirection: "row",

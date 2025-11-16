@@ -1,0 +1,13 @@
+given the file api-source.txt, you are instructed to:
+
+1. restyle the application using login-screen.tsx as the base for look and feel
+2. in the assignment-details-screen, you should preview the lessons, and add a simple "Começar!" button
+3. you should reroute the application to the needs
+4. the assignment-details-screen should navigate to the lessons-screen, which is a paged screen, that should have
+one page for each lesson. for lesson_type = "complete": word -> is the target, similar to hanged man game, one letter per box, and for the indexes in hint, they should be readonly and visible.
+and for "quizz" -> there should be N cards, N being the number of options, and one correct answer.
+5. the lessons-screen needs to be paginated, and when finished, there should be an api call to "example.org/json/" (use this exact url) and send
+in the answer.
+
+execute the tasks provided, there is no reason to run the application and test, that will be left to me
+do not change the instructions.txt or api-source.txt files
