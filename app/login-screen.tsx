@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { Button, TextInput, View, Text, Image } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ThemedTextInput from "@/components/themed-text-input";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedButton from "@/components/themed-button";
+import ThemedText from "@/components/themed-text";
+import { Feather } from "@expo/vector-icons";
 
 export default function LoginScreen() {
   const navigation = useNavigation();
@@ -16,69 +24,140 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView>
-      <View style={{ padding: 20 }}>
-        <Image
-          source={require("../assets/images/brand/logo-text.png")}
-          style={{
-            objectFit: "contain",
-            width: 280,
-            marginHorizontal: "auto",
-          }}
-        />
-        <Text
-          style={{
-            fontSize: 32,
-            letterSpacing: -0.75,
-            fontFamily: "Inter",
-            textAlign: "center",
-          }}
-        >
-          Olá!
-        </Text>
-        <Text
-          style={{
-            textAlign: "center",
-            marginBottom: 20,
-            fontFamily: "Inter",
-            letterSpacing: -0.55,
-            fontSize: 18,
-          }}
-        >
-          Coloque aqui os dados passados pelo professor para acessar as atividades!
-        </Text>
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.topHalf} />
+        <View style={styles.bottomHalf} />
+        <View style={styles.content}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../assets/images/brand/logo-text.png")}
+              style={styles.logo}
+            />
+          </View>
+          <ThemedText style={styles.subtitle}>
+            Acesse as atividades com os dados enviados pelo professor!
+          </ThemedText>
 
-        <ThemedTextInput
-          style={{
-            borderWidth: 1,
-            padding: 10,
-            marginBottom: 15,
-            textTransform: "uppercase",
-          }}
-          placeholder="Chave"
-          onChangeText={setChave}
-          maxLength={6}
-          value={chave}
-          autoCapitalize="none"
-        />
+          <View style={styles.inputContainer}>
+            <Feather name="key" size={24} color="#87aade" style={styles.icon} />
+            <ThemedTextInput
+              style={styles.input}
+              placeholder="Chave de Acesso"
+              onChangeText={setChave}
+              maxLength={6}
+              value={chave}
+              autoCapitalize="characters"
+              placeholderTextColor="#aaa"
+            />
+          </View>
 
-        <ThemedTextInput
-          style={{ borderWidth: 1, padding: 10, marginBottom: 65 }}
-          placeholder="PIN"
-          onChangeText={setPin}
-          maxLength={4}
-          value={pin}
-          secureTextEntry={true}
-          keyboardType="numeric"
-        />
+          <View style={styles.inputContainer}>
+            <Feather
+              name="lock"
+              size={24}
+              color="#87aade"
+              style={styles.icon}
+            />
+            <ThemedTextInput
+              style={styles.input}
+              placeholder="PIN"
+              onChangeText={setPin}
+              maxLength={4}
+              value={pin}
+              keyboardType="numeric"
+              placeholderTextColor="#aaa"
+            />
+          </View>
 
-        <ThemedButton
-          title="ENTRAR"
-          onPress={handleSubmit}
-          disabled={!chave || !pin}
-          brand
-        />
-      </View>
+          <ThemedButton
+            title="ENTRAR"
+            onPress={handleSubmit}
+            disabled={!chave || !pin}
+            brand
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  topHalf: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: "50%",
+    borderBottomRightRadius: 80,
+  },
+  bottomHalf: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "50%",
+    backgroundColor: "#f0f4f7",
+  },
+  content: {
+    padding: 30,
+    flex: 1,
+    justifyContent: "center",
+  },
+  logoContainer: {
+    width: 300,
+    borderRadius: 80,
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logo: {
+    width: "100%",
+    resizeMode: "contain",
+  },
+  title: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "white",
+    position: "absolute",
+    top: 100,
+    alignSelf: "center",
+  },
+  subtitle: {
+    textAlign: "center",
+    marginBottom: 24,
+    fontSize: 18,
+    letterSpacing: -0.5,
+    lineHeight: 24,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 25,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: "transparent",
+    borderWidth: 0,
+    paddingVertical: 15,
+    color: "#333",
+    fontSize: 18,
+  },
+});

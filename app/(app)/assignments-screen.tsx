@@ -1,10 +1,10 @@
 import { useNavigation } from "expo-router";
-import { Image } from "react-native";
-import { Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedText from "@/components/themed-text";
 import ThemedButton from "@/components/themed-button";
+import { Feather } from "@expo/vector-icons";
 
 export default function AssignmentsScreen() {
   const navigator = useNavigation();
@@ -37,13 +37,16 @@ export default function AssignmentsScreen() {
     return map[status] ?? "N/A";
   }
 
-  function mapLabelColor(status: string) {
+  function mapLabelStyle(status: string): {
+    color: string;
+    icon: keyof typeof Feather.glyphMap;
+  } {
     const map: any = {
-      pending: ["#dcfce7", "#22c55e"],
-      open: ["#fef9c3", "#eab308"],
-      finished: ["#fee2e2", "#ef4444"],
+      pending: { color: "#22c55e", icon: "gift" },
+      open: { color: "#eab308", icon: "edit-3" },
+      finished: { color: "#ef4444", icon: "check-circle" },
     };
-    return map[status] ?? "";
+    return map[status] ?? { color: "#ccc", icon: "alert-circle" };
   }
 
   useEffect(() => {
@@ -51,69 +54,36 @@ export default function AssignmentsScreen() {
   }, []);
 
   return (
-    <SafeAreaView>
-      <View style={{ padding: 20 }}>
-        <ThemedText
-          style={{
-            letterSpacing: -0.5,
-            paddingVertical: 24,
-            fontSize: 24,
-            fontWeight: "900",
-            textAlign: "center",
-          }}
-        >
-          ATIVIDADES
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <ThemedText style={styles.title} bold>
+          Minhas Atividades
         </ThemedText>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-            marginBottom: 24,
-          }}
-        >
+        <View style={styles.assignmentsList}>
           {assignments.map((item: any) => {
+            const statusStyle = mapLabelStyle(item.status);
             return (
-              <View
-                style={{
-                  backgroundColor: "#f9fafb",
-                  borderColor: "#e5e7eb",
-                  borderWidth: 1,
-                  minHeight: 120,
-                  padding: 12,
-                  borderRadius: 8,
-                }}
-                key={item.id}
-              >
-                <Text
-                  style={{ fontSize: 24, marginBottom: 16, fontWeight: "700" }}
-                >
-                  {item.assignment.title}
-                </Text>
-                <Text style={{ fontSize: 16, opacity: 0.5 }}>
-                  {item.assignment.description}
-                </Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginTop: 12,
-                  }}
-                >
-                  <Text
-                    style={{
-                      backgroundColor: mapLabelColor(item.status)[0],
-                      color: mapLabelColor(item.status)[1],
-                      borderWidth: 1,
-                      borderColor: mapLabelColor(item.status)[1],
-                      borderRadius: 1000,
-                      paddingHorizontal: 12,
-                      paddingVertical: 8,
-                    }}
+              <View style={styles.card} key={item.id}>
+                <View style={styles.cardHeader}>
+                  <ThemedText style={styles.cardTitle}>
+                    {item.assignment.title}
+                  </ThemedText>
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      { backgroundColor: statusStyle.color },
+                    ]}
                   >
-                    {mapStatus(item.status)}
-                  </Text>
+                    <Feather name={statusStyle.icon} size={16} color="white" />
+                    <ThemedText style={styles.statusText}>
+                      {mapStatus(item.status)}
+                    </ThemedText>
+                  </View>
                 </View>
+                <ThemedText style={styles.cardDescription}>
+                  {item.assignment.description}
+                </ThemedText>
+
                 <View style={{ marginTop: 24 }}>
                   <ThemedButton
                     title="Começar!"
@@ -133,3 +103,72 @@ export default function AssignmentsScreen() {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#e1f5fe",
+  },
+  content: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 38,
+    letterSpacing: -0.5,
+    color: "#005a9c",
+    textAlign: "center",
+    marginVertical: 24,
+  },
+  assignmentsList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 24,
+  },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 25,
+    padding: 25,
+    borderWidth: 3,
+    borderColor: "#87aade",
+    shadowColor: "#005a9c",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  cardTitle: {
+    fontSize: 24,
+    color: "#333",
+    letterSpacing: -0.5,
+    fontFamily: "ComicNeue_700Bold",
+    flex: 1,
+  },
+  cardDescription: {
+    fontSize: 18,
+    color: "#666",
+    lineHeight: 24,
+  },
+  statusBadge: {
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  statusText: {
+    color: "white",
+    fontFamily: "ComicNeue_700Bold",
+    fontSize: 16,
+  },
+});

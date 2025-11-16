@@ -18,7 +18,11 @@ export default function HomeNavigator() {
         component={AssignmentDetailsScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="lesson-screen" component={LessonScreen} />
+      <Stack.Screen
+        name="lesson-screen"
+        component={LessonScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

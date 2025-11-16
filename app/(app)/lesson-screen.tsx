@@ -1,91 +1,60 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedButton from "@/components/themed-button";
 import ThemedText from "@/components/themed-text";
-import {useRoute} from "@react-navigation/native";
-
-// Mock data for a quizz lesson, as api-source.txt doesn't contain one.
-const mockQuizzLesson = {
-    id: 4,
-    created_at: null,
-    updated_at: null,
-    title: "Quiz de Cores",
-    tags: "Cores,Quiz",
-    description: "Um quiz sobre cores.",
-    statement: "Qual a cor do céu?",
-    lesson_type: "quizz",
-    image: null,
-    data: {
-      options: ["Azul", "Verde", "Vermelho"],
-      correct_answer: "Azul"
-    },
-    author: 1
-};
-
+import { useRoute } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 export default function LessonScreen() {
   const route = useRoute();
-  const lessons = route.params?.lessons;
-  // Add the mock quizz lesson to the lessons list
-  const lessonsWithMock = [...lessons, mockQuizzLesson];
+  const lessons = route.params?.lessons as any[];
 
   const navigator = useNavigation();
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<any>({});
 
-  const currentLesson = lessonsWithMock[currentPage];
+  const currentLesson = lessons[currentPage];
 
   const handleNext = () => {
-    if (currentPage < lessonsWithMock.length - 1) {
+    if (currentPage < lessons.length - 1) {
       setCurrentPage(currentPage + 1);
     } else {
-      // Finish logic
       handleSubmit();
     }
   };
 
-  const handlePrevious = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
   const handleSubmit = async () => {
-    try {
-      // await fetch("http://example.org/json/", {
-        // method: "POST",
-        // headers: {
-          // "Content-Type": "application/json",
-        // },
-        // body: JSON.stringify({ answers }),
-      // });
-      // alert("Atividade finalizada com sucesso!");
-      navigator.goBack();
-    } catch (error) {
-      // console.error(error);
-      // alert("Ocorreu um erro ao enviar a atividade.");
-    }
+    navigator.goBack();
   };
 
   const renderLesson = () => {
     if (currentLesson.lesson_type === "complete") {
       const { word, hints } = currentLesson.data;
-      const wordArray = word.split('');
+      const wordArray = word.split("");
 
       const handleWordChange = (text: string, index: number) => {
         const newAnswers = { ...answers };
         if (!newAnswers[currentLesson.id]) {
-          newAnswers[currentLesson.id] = new Array(word.length).fill('');
+          newAnswers[currentLesson.id] = new Array(word.length).fill("");
         }
         newAnswers[currentLesson.id][index] = text.toUpperCase();
         setAnswers(newAnswers);
       };
 
       return (
-        <View>
-          <ThemedText style={styles.statement}>{currentLesson.statement}</ThemedText>
+        <View style={styles.lessonContent}>
+          <ThemedText style={styles.statement}>
+            {currentLesson.statement}
+          </ThemedText>
           <View style={styles.wordContainer}>
             {wordArray.map((char: string, index: number) => {
               const isHint = hints.includes(String(index));
@@ -93,7 +62,13 @@ export default function LessonScreen() {
                 <TextInput
                   key={index}
                   style={[styles.letterBox, isHint && styles.hintBox]}
-                  value={isHint ? char : (answers[currentLesson.id] && answers[currentLesson.id][index]) || ''}
+                  value={
+                    isHint
+                      ? char
+                      : (answers[currentLesson.id] &&
+                          answers[currentLesson.id][index]) ||
+                        ""
+                  }
                   onChangeText={(text) => handleWordChange(text, index)}
                   maxLength={1}
                   editable={!isHint}
@@ -114,42 +89,62 @@ export default function LessonScreen() {
       };
 
       return (
-        <View>
-          <ThemedText style={styles.statement}>{currentLesson.statement}</ThemedText>
+        <View style={styles.lessonContent}>
+          <ThemedText style={styles.statement}>
+            {currentLesson.statement}
+          </ThemedText>
           <View style={styles.optionsContainer}>
-            {options.map((option: string, index: number) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.optionCard,
-                  answers[currentLesson.id] === option && styles.selectedOptionCard,
-                ]}
-                onPress={() => handleOptionSelect(option)}
-              >
-                <Text style={styles.optionText}>{option}</Text>
-              </TouchableOpacity>
-            ))}
+            {options.map((option: string, index: number) => {
+              const isSelected = answers[currentLesson.id] === option;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.optionCard,
+                    isSelected && styles.selectedOptionCard,
+                  ]}
+                  onPress={() => handleOptionSelect(option)}
+                >
+                  <ThemedText style={styles.optionText}>{option}</ThemedText>
+                  {isSelected && (
+                    <Feather name="check-circle" size={24} color="white" />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       );
     }
-    return <Text>Lesson type not supported yet</Text>;
+    return (
+      <ThemedText style={{ fontFamily: "Inter" }}>
+        Lesson type not supported yet
+      </ThemedText>
+    );
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <ThemedText style={styles.title}>{currentLesson.title}</ThemedText>
-        {renderLesson()}
-        <View style={styles.navigationButtons}>
-          <ThemedButton title="Anterior" onPress={handlePrevious} disabled={currentPage === 0} />
-          <ThemedButton
-            title={currentPage === lessonsWithMock.length - 1 ? "Finalizar" : "Próximo"}
-            onPress={handleNext}
-            brand
-          />
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.content}>
+          <ThemedText style={styles.title} bold>
+            {currentLesson.title}
+          </ThemedText>
+          {renderLesson()}
+          <View style={styles.navigationButtons}>
+            <ThemedButton
+              title={
+                currentPage === lessons.length - 1 ? "Finalizar" : "Próximo"
+              }
+              onPress={handleNext}
+              brand
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -157,60 +152,86 @@ export default function LessonScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#E1F5FE",
+  },
+  content: {
+    flex: 1,
     padding: 20,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 48,
+    color: "#005a9c",
+    textAlign: "center",
     marginBottom: 20,
+  },
+  lessonContent: {
+    flex: 1,
+    justifyContent: "center",
   },
   statement: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 20,
+    fontSize: 28,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 40,
+    lineHeight: 36,
   },
   wordContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
     marginBottom: 20,
   },
   letterBox: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    width: 40,
-    height: 40,
-    textAlign: 'center',
-    fontSize: 20,
-    margin: 5,
+    borderWidth: 3,
+    borderColor: "#87aade",
+    backgroundColor: "white",
+    width: 60,
+    height: 70,
+    textAlign: "center",
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#005a9c",
+    margin: 8,
+    borderRadius: 15,
   },
   hintBox: {
-    backgroundColor: '#eee',
+    backgroundColor: "#d1e3f8",
+    color: "#555",
   },
   navigationButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    paddingVertical: 10,
   },
   optionsContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
   },
   optionCard: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: "white",
     padding: 20,
-    borderRadius: 8,
-    marginBottom: 10,
+    borderRadius: 20,
+    marginBottom: 15,
+    shadowColor: "#005a9c",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth: 3,
+    borderColor: "#b3e5fc",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   selectedOptionCard: {
-    backgroundColor: '#dcfce7',
-    borderColor: '#22c55e',
+    backgroundColor: "#87aade",
+    borderColor: "#005a9c",
   },
   optionText: {
-    fontSize: 18,
-    textAlign: 'center',
+    fontSize: 22,
+    fontWeight: "600",
+    color: "#333",
   },
 });

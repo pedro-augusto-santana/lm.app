@@ -6,6 +6,7 @@
       "name": "letramagica",
       "dependencies": {
         "@expo-google-fonts/chewy": "^0.4.0",
+        "@expo-google-fonts/comic-neue": "^0.4.1",
         "@expo-google-fonts/mali": "^0.4.1",
         "@expo-google-fonts/margarine": "^0.4.1",
         "@expo/vector-icons": "^15.0.3",
@@ -260,6 +261,8 @@
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.4.1", "", { "dependencies": { "@eslint/core": "^0.17.0", "levn": "^0.4.1" } }, "sha512-43/qtrDUokr7LJqoF2c3+RInu/t4zfrpYdoSDfYyhg52rwLV6TnOvdG4fXm7IkSB3wErkcmJS9iEhjVtOSEjjA=="],
 
     "@expo-google-fonts/chewy": ["@expo-google-fonts/chewy@0.4.0", "", {}, "sha512-xDeMnRVyvb4Zb0ptSqNc2XNnVPz13yyeAMNObHbymnktpHJgKkbgILevdZIs0tcxK6oKKGQCR6XG3MxXJjSGtQ=="],
+
+    "@expo-google-fonts/comic-neue": ["@expo-google-fonts/comic-neue@0.4.1", "", {}, "sha512-1kYFjZeSQnGFeMnwk/B7M3p+og5eW6QZLxjMeMiZ/7TnP2IEAdYo0Gjy3XH2TpoiBHS9PAwEHaETVthVPsF09Q=="],
 
     "@expo-google-fonts/mali": ["@expo-google-fonts/mali@0.4.1", "", {}, "sha512-sW0TI/+B1w1VkCYDEuzavjcmDXfJlO77tgJwwDWS5I546Dsvt+9I3L4H4WI4IYv1S2eba4bQTP2zy6UvsWTngA=="],
 

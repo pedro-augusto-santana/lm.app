@@ -22,11 +22,10 @@ const style = StyleSheet.create({
   },
   textStyle: {
     textAlign: "center",
-    fontWeight: 900,
+    fontFamily: "ComicNeue_700Bold",
     letterSpacing: -0.25,
-    fontFamily: "Inter",
     fontSize: 20,
-    color: "white"
+    color: "white",
   },
 });
 
@@ -37,9 +36,7 @@ export default function ThemedButton(props: ThemedButtonProps) {
       onPress={props.onPress}
       activeOpacity={0.7} // Optional: Adjust the feedback when pressed
     >
-      <Text style={[style.textStyle, props.brand ? {
-        fontWeight: 900
-      } : {}]}>{props.title}</Text>
+      <Text style={[style.textStyle]}>{props.title}</Text>
     </TouchableOpacity>
   );
 }
