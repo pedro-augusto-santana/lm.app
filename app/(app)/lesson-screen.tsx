@@ -1,5 +1,3 @@
-import { useNavigation } from "expo-router";
-import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -14,6 +12,8 @@ import ThemedButton from "@/components/themed-button";
 import ThemedText from "@/components/themed-text";
 import { useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { useLessonFlow } from "@/hooks/use-lesson-flow";
+import FeedbackModal from "@/components/feedback-modal";
 
 interface Alternative {
   id: number;
@@ -49,74 +49,22 @@ export default function LessonScreen() {
   const route = useRoute();
   const lessons = route.params?.lessons as Lesson[];
 
-  const navigator = useNavigation();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [answers, setAnswers] = useState<any>({});
-  const inputRefs = useRef<(TextInput | null)[]>([]);
-
-  const currentLesson = lessons[currentPage];
-
-  useEffect(() => {
-    if (currentLesson.lesson_type === "complete") {
-      const { hints, word } = currentLesson.data;
-
-      // Find the first non-hint input
-      let firstEditableIndex = -1;
-      for (let i = 0; i < word.length; i++) {
-        if (!hints.includes(String(i))) {
-          firstEditableIndex = i;
-          break;
-        }
-      }
-
-      if (firstEditableIndex !== -1 && inputRefs.current[firstEditableIndex]) {
-        inputRefs.current[firstEditableIndex]?.focus();
-      }
-    }
-  }, [currentLesson.id]);
-
-  const handleWordChange = (text: string, index: number) => {
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [currentLesson.id]: {
-        ...(prevAnswers[currentLesson.id] || {}),
-        [index]: text.toUpperCase(),
-      },
-    }));
-
-    if (text.length > 0 && currentLesson.lesson_type === "complete") {
-      const { word, hints } = currentLesson.data;
-
-      // Find the next editable input
-      let nextIndex = -1;
-      for (let i = index + 1; i < word.length; i++) {
-        if (!hints.includes(String(i))) {
-          nextIndex = i;
-          break;
-        }
-      }
-
-      if (nextIndex !== -1 && inputRefs.current[nextIndex]) {
-        inputRefs.current[nextIndex]?.focus();
-      }
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < lessons.length - 1) {
-      setCurrentPage(currentPage + 1);
-    } else {
-      handleSubmit();
-    }
-  };
-
-  const handleSubmit = async () => {
-    navigator.goBack();
-  };
+  const {
+    currentPage,
+    currentLesson,
+    answers,
+    inputRefs,
+    isFeedbackVisible,
+    isCorrect,
+    handleWordChange,
+    handleOptionSelect,
+    handleNext,
+    handleModalClose,
+  } = useLessonFlow(lessons);
 
   const renderLesson = () => {
     if (currentLesson.lesson_type === "complete") {
-      const { word, hints } = currentLesson.data;
+      const { word, hints } = currentLesson.data as CompleteData;
       const wordArray = word.split("");
 
       return (
@@ -158,13 +106,7 @@ export default function LessonScreen() {
         </View>
       );
     } else if (currentLesson.lesson_type === "quizz") {
-      const { alternatives } = currentLesson.data;
-
-      const handleOptionSelect = (alternativeId: number) => {
-        const newAnswers = { ...answers };
-        newAnswers[currentLesson.id] = alternativeId;
-        setAnswers(newAnswers);
-      };
+      const { alternatives } = currentLesson.data as QuizzData;
 
       return (
         <View style={styles.lessonContent}>
@@ -172,24 +114,28 @@ export default function LessonScreen() {
             {currentLesson.statement}
           </ThemedText>
           <View style={styles.optionsContainer}>
-            {alternatives.map((alternative: { id: number; text: string }, index: number) => {
-              const isSelected = answers[currentLesson.id] === alternative.id;
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.optionCard,
-                    isSelected && styles.selectedOptionCard,
-                  ]}
-                  onPress={() => handleOptionSelect(alternative.id)}
-                >
-                  <ThemedText style={styles.optionText}>{alternative.text}</ThemedText>
-                  {isSelected && (
-                    <Feather name="check-circle" size={24} color="white" />
-                  )}
-                </TouchableOpacity>
-              );
-            })}
+            {alternatives.map(
+              (alternative: { id: number; text: string }, index: number) => {
+                const isSelected = answers[currentLesson.id] === alternative.id;
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.optionCard,
+                      isSelected && styles.selectedOptionCard,
+                    ]}
+                    onPress={() => handleOptionSelect(alternative.id)}
+                  >
+                    <ThemedText style={styles.optionText}>
+                      {alternative.text}
+                    </ThemedText>
+                    {isSelected && (
+                      <Feather name="check-circle" size={24} color="white" />
+                    )}
+                  </TouchableOpacity>
+                );
+              },
+            )}
           </View>
         </View>
       );
@@ -223,6 +169,11 @@ export default function LessonScreen() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      <FeedbackModal
+        isVisible={isFeedbackVisible}
+        isCorrect={isCorrect}
+        onClose={handleModalClose}
+      />
     </SafeAreaView>
   );
 }

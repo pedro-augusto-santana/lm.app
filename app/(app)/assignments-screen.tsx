@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedText from "@/components/themed-text";
@@ -59,11 +59,12 @@ export default function AssignmentsScreen() {
         <ThemedText style={styles.title} bold>
           Minhas Atividades
         </ThemedText>
-        <View style={styles.assignmentsList}>
-          {assignments.map((item: any) => {
+        <FlatList
+          data={assignments}
+          renderItem={({ item }: { item: any }) => {
             const statusStyle = mapLabelStyle(item.status);
             return (
-              <View style={styles.card} key={item.id}>
+              <View style={styles.card}>
                 <View style={styles.cardHeader}>
                   <ThemedText style={styles.cardTitle}>
                     {item.assignment.title}
@@ -97,8 +98,11 @@ export default function AssignmentsScreen() {
                 </View>
               </View>
             );
-          })}
-        </View>
+          }}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
+          contentContainerStyle={{ paddingBottom: 60 }}
+        />
       </View>
     </SafeAreaView>
   );
@@ -111,6 +115,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    flex: 1,
   },
   title: {
     fontSize: 38,
@@ -118,11 +123,6 @@ const styles = StyleSheet.create({
     color: "#005a9c",
     textAlign: "center",
     marginVertical: 24,
-  },
-  assignmentsList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 24,
   },
   card: {
     backgroundColor: "white",
