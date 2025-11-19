@@ -1,10 +1,9 @@
-import { useNavigation } from "expo-router";
-import { StyleSheet, View, FlatList } from "react-native";
-import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ThemedText from "@/components/themed-text";
 import ThemedButton from "@/components/themed-button";
+import ThemedText from "@/components/themed-text";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
+import { useState, useEffect } from "react";
+import { SafeAreaView, View, FlatList, StyleSheet } from "react-native";
 
 export default function AssignmentsScreen() {
   const navigator = useNavigation();
@@ -42,9 +41,9 @@ export default function AssignmentsScreen() {
     icon: keyof typeof Feather.glyphMap;
   } {
     const map: any = {
-      pending: { color: "#22c55e", icon: "gift" },
-      open: { color: "#eab308", icon: "edit-3" },
-      finished: { color: "#ef4444", icon: "check-circle" },
+      pending: { color: "#7AC142", icon: "gift" },
+      open: { color: "#FFD700", icon: "edit-3" },
+      finished: { color: "#EA738D", icon: "check-circle" },
     };
     return map[status] ?? { color: "#ccc", icon: "alert-circle" };
   }
@@ -111,7 +110,7 @@ export default function AssignmentsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e1f5fe",
+    backgroundColor: "#F8F8F8",
   },
   content: {
     padding: 20,
@@ -120,17 +119,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 38,
     letterSpacing: -0.5,
-    color: "#005a9c",
+    color: "#89ABE3",
     textAlign: "center",
     marginVertical: 24,
   },
   card: {
     backgroundColor: "white",
-    borderRadius: 25,
+    borderRadius: 30,
     padding: 25,
     borderWidth: 3,
-    borderColor: "#87aade",
-    shadowColor: "#005a9c",
+    borderColor: "#89ABE3",
+    shadowColor: "#89ABE3",
     shadowOffset: {
       width: 0,
       height: 4,

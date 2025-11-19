@@ -181,7 +181,7 @@ export default function LessonScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E1F5FE",
+    backgroundColor: "#F8F8F8",
   },
   content: {
     flex: 1,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    color: "#005a9c",
+    color: "#89ABE3",
     textAlign: "center",
     marginBottom: 20,
   },
@@ -206,9 +206,10 @@ const styles = StyleSheet.create({
   },
   statement: {
     fontSize: 28,
-    color: "#333",
+    color: "#333333",
     lineHeight: 36,
     flexShrink: 1,
+    textAlign: "center",
   },
   lessonImage: {
     height: "50%",
@@ -217,6 +218,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     marginRight: 15,
     borderRadius: 10,
+    marginBottom: 20,
   },
   wordContainer: {
     flexDirection: "row",
@@ -226,14 +228,14 @@ const styles = StyleSheet.create({
   },
   letterBox: {
     borderWidth: 3,
-    borderColor: "#87aade",
+    borderColor: "#89ABE3",
     backgroundColor: "white",
     width: 60,
     height: 70,
     textAlign: "center",
     fontSize: 32,
     fontWeight: "bold",
-    color: "#005a9c",
+    color: "#89ABE3",
     margin: 8,
     borderRadius: 15,
   },
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     marginBottom: 15,
-    shadowColor: "#005a9c",
+    shadowColor: "#89ABE3",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -262,14 +264,14 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
     borderWidth: 3,
-    borderColor: "#b3e5fc",
+    borderColor: "#89ABE3",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   selectedOptionCard: {
-    backgroundColor: "#87aade",
-    borderColor: "#005a9c",
+    backgroundColor: "#7AC142",
+    borderColor: "#7AC142",
   },
   optionText: {
     fontSize: 22,

@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   correctContainer: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#7AC142",
   },
   incorrectContainer: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#EA738D",
   },
   modalText: {
     marginTop: 20,

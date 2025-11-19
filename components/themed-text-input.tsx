@@ -4,15 +4,15 @@ const style = StyleSheet.create({
   default: {
     letterSpacing: -0.25,
     fontSize: 18,
-    fontFamily: "Inter",
-    lineHeight: 40,
-    backgroundColor: '#f8fafc',
+    fontFamily: "ComicNeue_400Regular",
+    lineHeight: 24,
+    backgroundColor: '#F8F8F8',
     borderWidth: 2,
-    borderColor: '#e0e7ec',
-    paddingVertical: 14,
+    borderColor: '#89ABE3',
+    paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 12,
-    color: '#4a5568'
+    borderRadius: 20,
+    color: '#333333'
   }
 });
 

@@ -29,8 +29,6 @@ export default function LoginScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={styles.topHalf} />
-        <View style={styles.bottomHalf} />
         <View style={styles.content}>
           <View style={styles.logoContainer}>
             <Image
@@ -43,7 +41,7 @@ export default function LoginScreen() {
           </ThemedText>
 
           <View style={styles.inputContainer}>
-            <Feather name="key" size={24} color="#87aade" style={styles.icon} />
+            <Feather name="key" size={24} color="#89ABE3" style={styles.icon} />
             <ThemedTextInput
               style={styles.input}
               placeholder="Chave de Acesso"
@@ -59,7 +57,7 @@ export default function LoginScreen() {
             <Feather
               name="lock"
               size={24}
-              color="#87aade"
+              color="#89ABE3"
               style={styles.icon}
             />
             <ThemedTextInput
@@ -88,22 +86,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  topHalf: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: "50%",
-    borderBottomRightRadius: 80,
-  },
-  bottomHalf: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "50%",
-    backgroundColor: "#f0f4f7",
+    backgroundColor: "#F8F8F8",
   },
   content: {
     padding: 30,
@@ -112,42 +95,30 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     width: 300,
-    borderRadius: 80,
     alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 20,
   },
   logo: {
     width: "100%",
     resizeMode: "contain",
   },
-  title: {
-    fontSize: 15,
-    textAlign: "center",
-    color: "white",
-    position: "absolute",
-    top: 100,
-    alignSelf: "center",
-  },
   subtitle: {
     textAlign: "center",
-    marginBottom: 24,
+    marginBottom: 30,
     fontSize: 18,
     letterSpacing: -0.5,
     lineHeight: 24,
+    color: "#333333",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    borderRadius: 25,
+    borderRadius: 20,
     marginBottom: 15,
     paddingHorizontal: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 5,
-    elevation: 3,
   },
   icon: {
     marginRight: 10,

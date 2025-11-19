@@ -27,7 +27,7 @@ export default function AssignmentDetailsScreen() {
           </ThemedText>
           {assignment.lessons.map((lesson: any) => (
             <View key={lesson.id} style={styles.lessonCard}>
-              <Feather name="book-open" size={24} color="#87aade" />
+              <Feather name="book-open" size={24} color="#89ABE3" />
               <View style={{ flex: 1, marginLeft: 15 }}>
                 <ThemedText style={styles.lessonCardTitle} bold>
                   {lesson.title}
@@ -47,6 +47,17 @@ export default function AssignmentDetailsScreen() {
           }
           brand
         />
+        <View style={{ paddingTop: 20 }}>
+          <ThemedButton
+            style={{
+              backgroundColor: "#EA738D",
+              marginHorizontal: "auto",
+              minWidth: 192,
+            }}
+            title="Voltar!"
+            onPress={() => navigator.goBack()}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -55,7 +66,7 @@ export default function AssignmentDetailsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E1F5FE",
+    backgroundColor: "#F8F8F8",
   },
   content: {
     padding: 20,
@@ -63,13 +74,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 48,
-    color: "#005a9c",
+    color: "#89ABE3",
     textAlign: "center",
     marginVertical: 24,
   },
   description: {
     fontSize: 18,
-    color: "#555",
+    color: "#333333",
     textAlign: "center",
     marginBottom: 30,
     lineHeight: 24,
@@ -81,7 +92,7 @@ const styles = StyleSheet.create({
   lessonsTitle: {
     fontWeight: "bold",
     fontSize: 24,
-    color: "#005a9c",
+    color: "#89ABE3",
     marginBottom: 20,
   },
   lessonCard: {
@@ -92,8 +103,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#b3e5fc",
-    shadowColor: "#005a9c",
+    borderColor: "#89ABE3",
+    shadowColor: "#89ABE3",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -105,11 +116,13 @@ const styles = StyleSheet.create({
   lessonCardTitle: {
     fontSize: 22,
     fontWeight: "700",
+    fontFamily: "ComicNeue_700Bold",
     color: "#333",
     marginBottom: 5,
   },
   lessonCardDescription: {
     fontSize: 16,
+    fontFamily: "ComicNeue_400Regular",
     color: "#666",
   },
 });
