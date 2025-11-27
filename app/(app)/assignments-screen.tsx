@@ -3,13 +3,22 @@ import ThemedText from "@/components/themed-text";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useState, useEffect } from "react";
-import { SafeAreaView, View, FlatList, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  FlatList,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AssignmentsScreen() {
   const navigator = useNavigation();
   const [assignments, setAssignments] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
   async function fetchData() {
+    setRefreshing(true);
     try {
       const chave = await AsyncStorage.getItem("chave");
       const pin = await AsyncStorage.getItem("pin");
@@ -35,6 +44,8 @@ export default function AssignmentsScreen() {
     } catch (error) {
       console.error("Failed to fetch assignments:", error);
       alert("Não foi possível buscar as atividades.");
+    } finally {
+      setRefreshing(false);
     }
   }
 
@@ -101,6 +112,7 @@ export default function AssignmentsScreen() {
                     onPress={() =>
                       navigator.navigate("assignment-details-screen", {
                         assignment: item.assignment,
+                        status: item.status
                       })
                     }
                     brand
@@ -112,6 +124,9 @@ export default function AssignmentsScreen() {
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={() => <View style={{ height: 24 }} />}
           contentContainerStyle={{ paddingBottom: 60 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
+          }
         />
       </View>
     </SafeAreaView>

@@ -6,10 +6,88 @@ import ThemedText from "@/components/themed-text";
 import { useRoute } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 
+interface Alternative {
+  id: number;
+  text: string;
+}
+
+interface QuizzData {
+  question: string;
+  alternatives: Alternative[];
+  answer: string;
+}
+
+interface CompleteData {
+  word: string;
+  hints: string[];
+}
+
+interface Lesson {
+  id: number;
+  created_at: string | null;
+  updated_at: string | null;
+  title: string;
+  tags: string;
+  description: string;
+  statement: string;
+  lesson_type: "complete" | "quizz";
+  image: string | null;
+  data: QuizzData | CompleteData;
+  author: number;
+}
+
+interface Assignment {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  assignment_id: number;
+  user_id: number;
+  status: "pending" | "open" | "finished";
+  title: string;
+  description: string;
+  lessons: Lesson[];
+}
+
 export default function AssignmentDetailsScreen() {
   const route = useRoute();
-  const assignment = route.params?.assignment as any;
+  const assignment = route.params?.assignment as Assignment;
+  const status = route.params?.status ?? "pending";
   const navigator = useNavigation();
+
+  function mapStatus(status: string) {
+    const map: any = {
+      pending: "Nova",
+      open: "Fazendo",
+      finished: "Feita",
+    };
+    return map[status] ?? "N/A";
+  }
+
+  function mapLabelStyle(status: string): {
+    color: string;
+    icon: keyof typeof Feather.glyphMap;
+  } {
+    const map: any = {
+      pending: { color: "#7AC142", icon: "gift" },
+      open: { color: "#FFD700", icon: "edit-3" },
+      finished: { color: "#EA738D", icon: "check-circle" },
+    };
+    return map[status] ?? { color: "#ccc", icon: "alert-circle" };
+  }
+
+  const getLessonAnswer = (lesson: Lesson) => {
+    if (lesson.lesson_type === "complete") {
+      return (lesson.data as CompleteData).word;
+    } else if (lesson.lesson_type === "quizz") {
+      const quizzData = lesson.data as QuizzData;
+      const correctAnswerId = quizzData.answer;
+      const correctAnswer = quizzData.alternatives.find(
+        (alt) => String(alt.id) === correctAnswerId,
+      );
+      return correctAnswer ? correctAnswer.text : "N/A";
+    }
+    return "N/A";
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -22,10 +100,31 @@ export default function AssignmentDetailsScreen() {
         </ThemedText>
 
         <View style={styles.lessonsContainer}>
-          <ThemedText style={styles.lessonsTitle} bold>
-            Lições:
-          </ThemedText>
-          {assignment.lessons.map((lesson: any) => (
+          <View style={styles.cardHeader}>
+            <ThemedText style={styles.lessonsTitle} bold>
+              Lições:
+            </ThemedText>
+            {status && (
+              <View
+                style={[
+                  styles.statusBadge,
+                  {
+                    backgroundColor: mapLabelStyle(status).color,
+                  },
+                ]}
+              >
+                <Feather
+                  name={mapLabelStyle(status).icon}
+                  size={16}
+                  color="white"
+                />
+                <ThemedText style={styles.statusText}>
+                  {mapStatus(status)}
+                </ThemedText>
+              </View>
+            )}
+          </View>
+          {assignment.lessons.map((lesson: Lesson) => (
             <View key={lesson.id} style={styles.lessonCard}>
               <Feather name="book-open" size={24} color="#89ABE3" />
               <View style={{ flex: 1, marginLeft: 15 }}>
@@ -35,6 +134,11 @@ export default function AssignmentDetailsScreen() {
                 <ThemedText style={styles.lessonCardDescription}>
                   {lesson.statement}
                 </ThemedText>
+                {status == "finished" && (
+                  <ThemedText style={styles.answerText}>
+                    RESPOSTA: {getLessonAnswer(lesson)}
+                  </ThemedText>
+                )}
               </View>
             </View>
           ))}
@@ -43,7 +147,9 @@ export default function AssignmentDetailsScreen() {
         <ThemedButton
           title="Começar!"
           onPress={() =>
-            navigator.navigate("lesson-screen", { lessons: assignment.lessons })
+            navigator.navigate("lesson-screen", {
+              lessons: assignment.lessons,
+            })
           }
           brand
         />
@@ -124,5 +230,30 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "ComicNeue_400Regular",
     color: "#666",
+  },
+  answerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#7AC142",
+    marginTop: 10,
+  },
+  cardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  statusBadge: {
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  statusText: {
+    color: "white",
+    fontFamily: "ComicNeue_700Bold",
+    fontSize: 16,
   },
 });
