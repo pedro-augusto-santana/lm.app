@@ -1,5 +1,5 @@
 import { useNavigation } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ThemedButton from "@/components/themed-button";
 import ThemedText from "@/components/themed-text";
@@ -145,12 +145,16 @@ export default function AssignmentDetailsScreen() {
         </View>
 
         <ThemedButton
-          title="Começar!"
-          onPress={() =>
-            navigator.navigate("lesson-screen", {
+          title={status == "pending" ? "Começar!" : "Você já fez essa tarefinha"}
+          onPress={() => {
+            // Alert.alert("teste", status);
+            if (status !== "pending") return;
+            return navigator.navigate("lesson-screen", {
               lessons: assignment.lessons,
             })
           }
+          }
+          disabled={status !== "pending"}
           brand
         />
         <View style={{ paddingTop: 20 }}>
