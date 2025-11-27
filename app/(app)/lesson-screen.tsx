@@ -48,6 +48,7 @@ interface Lesson {
 export default function LessonScreen() {
   const route = useRoute();
   const lessons = route.params?.lessons as Lesson[];
+  const assignmentId = route.params?.assignmentId as number;
 
   const {
     currentPage,
@@ -61,7 +62,7 @@ export default function LessonScreen() {
     handleNext,
     handleModalClose,
     handleKeyPress,
-  } = useLessonFlow(lessons);
+  } = useLessonFlow(lessons, assignmentId);
 
   const renderLesson = () => {
     if (currentLesson.lesson_type === "complete") {

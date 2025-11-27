@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Alert, TextInput } from "react-native";
 import { Audio } from "expo-av";
 import { useNavigation } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Interfaces from lesson-screen - should probably be in a types file
 interface Alternative {
@@ -34,7 +35,7 @@ interface Lesson {
   author: number;
 }
 
-export function useLessonFlow(lessons: Lesson[]) {
+export function useLessonFlow(lessons: Lesson[], assignmentId: number) {
   const navigator = useNavigation();
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<any>({});
@@ -173,19 +174,64 @@ export function useLessonFlow(lessons: Lesson[]) {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      const chave = await AsyncStorage.getItem("chave");
+      const pin = await AsyncStorage.getItem("pin");
+
+      if (!chave || !pin) {
+        Alert.alert(
+          "Erro de autenticação",
+          "Credenciais não encontradas. Por favor, faça login novamente.",
+        );
+        return;
+      }
+
+      const response = await fetch(
+        "http://192.168.0.195:4442/api/assignments/done/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chave,
+            pin,
+            assignmentId,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Mensagem", data.message);
+      } else {
+        Alert.alert(
+          "Erro",
+          data.message || "Ocorreu um erro ao finalizar a atividade.",
+        );
+      }
+    } catch (error) {
+      console.error("Failed to submit assignment", error);
+      Alert.alert(
+        "Erro",
+        "Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.",
+      );
+    } finally {
+      navigator.navigate("assignments-screen");
+    }
+  };
+
   const handleModalClose = () => {
     setFeedbackVisible(false);
     if (isCorrect) {
       if (currentPage < lessons.length - 1) {
         setCurrentPage(currentPage + 1);
       } else {
-        navigator.navigate("assignments-screen");
+        handleSubmit();
       }
     }
-  };
-
-  const handleSubmit = async () => {
-    navigator.goBack();
   };
 
   return {

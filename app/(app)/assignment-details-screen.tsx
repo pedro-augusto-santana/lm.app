@@ -145,17 +145,18 @@ export default function AssignmentDetailsScreen() {
         </View>
 
         <ThemedButton
-          title={status == "pending" ? "Começar!" : "Você já fez essa tarefinha"}
+          title={
+            status == "pending" ? "Começar!" : "Você já fez essa tarefinha"
+          }
           onPress={() => {
             // Alert.alert("teste", status);
             if (status !== "pending") return;
             return navigator.navigate("lesson-screen", {
               lessons: assignment.lessons,
-            })
-          }
-          }
+              assignmentId: assignment.id,
+            });
+          }}
           disabled={status !== "pending"}
-          brand
         />
         <View style={{ paddingTop: 20 }}>
           <ThemedButton
