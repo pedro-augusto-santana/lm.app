@@ -60,6 +60,7 @@ export default function LessonScreen() {
     handleOptionSelect,
     handleNext,
     handleModalClose,
+    handleKeyPress,
   } = useLessonFlow(lessons);
 
   const renderLesson = () => {
@@ -96,6 +97,9 @@ export default function LessonScreen() {
                         ""
                   }
                   onChangeText={(text) => handleWordChange(text, index)}
+                  onKeyPress={({ nativeEvent }) =>
+                    handleKeyPress(nativeEvent.key, index)
+                  }
                   maxLength={1}
                   editable={!isHint}
                   autoCapitalize="characters"

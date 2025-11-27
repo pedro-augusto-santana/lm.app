@@ -4,27 +4,38 @@ import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useState, useEffect } from "react";
 import { SafeAreaView, View, FlatList, StyleSheet } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AssignmentsScreen() {
   const navigator = useNavigation();
   const [assignments, setAssignments] = useState([]);
   async function fetchData() {
-    fetch("http://192.168.0.195:4442/api/assignments/for/KDHJYI/1919", {
-      headers: {
-        "access-control-allow-origin": "*, *",
-        "access-control-allow-methods": "*",
-        "access-control-allow-headers": "*",
-      },
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
+    try {
+      const chave = await AsyncStorage.getItem("chave");
+      const pin = await AsyncStorage.getItem("pin");
+
+      if (chave && pin) {
+        const response = await fetch(
+          `http://192.168.0.195:4442/api/assignments/for/${chave}/${pin}`,
+          {
+            headers: {
+              "access-control-allow-origin": "*, *",
+              "access-control-allow-methods": "*",
+              "access-control-allow-headers": "*",
+            },
+          }
+        );
+        const data = await response.json();
         setAssignments(data);
-      })
-      .catch((error) => {
-        alert(error);
-      });
+      } else {
+        alert("Dados de login não encontrados. Faça o login novamente.");
+        // Optionally, navigate to login screen
+        // navigator.navigate('login-screen');
+      }
+    } catch (error) {
+      console.error("Failed to fetch assignments:", error);
+      alert("Não foi possível buscar as atividades.");
+    }
   }
 
   function mapStatus(status: string) {

@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "@react-navigation/native";
 import ThemedTextInput from "@/components/themed-text-input";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,11 +18,55 @@ import { Feather } from "@expo/vector-icons";
 export default function LoginScreen() {
   const navigation = useNavigation();
 
-  const [chave, setChave] = useState("");
-  const [pin, setPin] = useState("");
+  const [chave, setChave] = useState("WMIBBX");
+  const [pin, setPin] = useState("9963");
 
-  const handleSubmit = () => {
-    navigation.replace("app");
+  useEffect(() => {
+    const loadLoginData = async () => {
+      try {
+        const storedChave = await AsyncStorage.getItem("chave");
+        const storedPin = await AsyncStorage.getItem("pin");
+        if (storedChave) setChave(storedChave);
+        if (storedPin) setPin(storedPin);
+      } catch (error) {
+        console.error("Failed to load login data from storage:", error);
+      }
+    };
+    loadLoginData();
+  }, []);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://192.168.0.195:4442/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: chave,
+          pin: pin,
+        }),
+      });
+
+      if (response.ok) {
+        // Save to AsyncStorage on successful login
+        await AsyncStorage.setItem("chave", chave);
+        await AsyncStorage.setItem("pin", pin);
+        navigation.replace("app");
+      } else {
+        const errorData = await response.json();
+        Alert.alert(
+          "Erro no Login",
+          errorData.message || "Chave de acesso ou PIN incorretos."
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert(
+        "Erro de Conexão",
+        "Não foi possível se conectar ao servidor. Verifique sua conexão com a internet."
+      );
+    }
   };
 
   return (

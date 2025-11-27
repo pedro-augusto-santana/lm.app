@@ -33,7 +33,7 @@ export default function AssignmentDetailsScreen() {
                   {lesson.title}
                 </ThemedText>
                 <ThemedText style={styles.lessonCardDescription}>
-                  {lesson.description}
+                  {lesson.statement}
                 </ThemedText>
               </View>
             </View>

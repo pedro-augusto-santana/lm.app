@@ -113,6 +113,25 @@ export function useLessonFlow(lessons: Lesson[]) {
     }
   };
 
+  const handleKeyPress = (key: string, index: number) => {
+    if (key === "Backspace" && currentLesson.lesson_type === "complete") {
+      const { hints } = currentLesson.data as CompleteData;
+      const userAnswerObject = answers[currentLesson.id] || {};
+      if (!userAnswerObject[index] || userAnswerObject[index].length === 0) {
+        let prevIndex = -1;
+        for (let i = index - 1; i >= 0; i--) {
+          if (!hints.includes(String(i))) {
+            prevIndex = i;
+            break;
+          }
+        }
+        if (prevIndex !== -1 && inputRefs.current[prevIndex]) {
+          inputRefs.current[prevIndex]?.focus();
+        }
+      }
+    }
+  };
+
   const handleOptionSelect = (alternativeId: number) => {
     setAnswers((prevAnswers: any) => ({
       ...prevAnswers,
@@ -181,5 +200,6 @@ export function useLessonFlow(lessons: Lesson[]) {
     handleNext,
     handleModalClose,
     handleSubmit,
+    handleKeyPress,
   };
 }
