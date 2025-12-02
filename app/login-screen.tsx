@@ -1,3 +1,4 @@
+import config from "../config";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -37,7 +38,7 @@ export default function LoginScreen() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://192.168.0.195:4442/api/login", {
+      const response = await fetch(`${config.api_base_url}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

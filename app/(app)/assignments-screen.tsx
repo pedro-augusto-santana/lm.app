@@ -1,3 +1,4 @@
+import config from "../../config";
 import ThemedButton from "@/components/themed-button";
 import ThemedText from "@/components/themed-text";
 import { Feather } from "@expo/vector-icons";
@@ -25,7 +26,7 @@ export default function AssignmentsScreen() {
 
       if (chave && pin) {
         const response = await fetch(
-          `http://192.168.0.195:4442/api/assignments/for/${chave}/${pin}`,
+          `${config.api_base_url}/api/assignments/for/${chave}/${pin}`,
           {
             headers: {
               "access-control-allow-origin": "*, *",

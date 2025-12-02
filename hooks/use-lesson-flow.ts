@@ -1,3 +1,4 @@
+import config from "../config";
 import { useState, useEffect, useRef } from "react";
 import { Alert, TextInput } from "react-native";
 import { Audio } from "expo-av";
@@ -188,7 +189,7 @@ export function useLessonFlow(lessons: Lesson[], assignmentId: number) {
       }
 
       const response = await fetch(
-        "http://192.168.0.195:4442/api/assignments/done/",
+        `${config.api_base_url}/api/assignments/done/`,
         {
           method: "POST",
           headers: {
